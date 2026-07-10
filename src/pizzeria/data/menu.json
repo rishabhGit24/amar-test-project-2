@@ -1,0 +1,66 @@
+[
+  {
+    "id": "pizza-001",
+    "name": "Margherita",
+    "description": "Classic Italian pizza with fresh tomato sauce, mozzarella cheese, and fragrant basil leaves on a hand-tossed crust.",
+    "price": 299,
+    "tag": "veg",
+    "imageAlt": "Margherita pizza with golden cheese and fresh basil"
+  },
+  {
+    "id": "pizza-002",
+    "name": "Pepperoni",
+    "description": "Loaded with generous slices of spicy pepperoni over rich tomato sauce and melted mozzarella on a crispy crust.",
+    "price": 449,
+    "tag": "non-veg",
+    "imageAlt": "Pepperoni pizza with crispy pepperoni slices and melted cheese"
+  },
+  {
+    "id": "pizza-003",
+    "name": "Paneer Tikka",
+    "description": "Tandoor-marinated paneer cubes, bell peppers, and onions on a spiced tomato base with a blend of Indian spices.",
+    "price": 399,
+    "tag": "veg",
+    "imageAlt": "Paneer Tikka pizza with colourful bell peppers and paneer cubes"
+  },
+  {
+    "id": "pizza-004",
+    "name": "BBQ Chicken",
+    "description": "Smoky BBQ sauce topped with grilled chicken strips, caramelised onions, and a three-cheese blend for a hearty bite.",
+    "price": 499,
+    "tag": "non-veg",
+    "imageAlt": "BBQ Chicken pizza with grilled chicken and smoky BBQ glaze"
+  },
+  {
+    "id": "pizza-005",
+    "name": "Farmhouse",
+    "description": "A garden-fresh medley of mushrooms, capsicum, tomatoes, and black olives on a herbed tomato sauce with mozzarella.",
+    "price": 349,
+    "tag": "veg",
+    "imageAlt": "Farmhouse pizza loaded with fresh vegetables and mozzarella"
+  },
+  {
+    "id": "pizza-006",
+    "name": "Mushroom Delight",
+    "description": "Triple mushroom blend — button, portobello, and shiitake — with garlic cream sauce, thyme, and aged parmesan.",
+    "price": 379,
+    "tag": "veg",
+    "imageAlt": "Mushroom Delight pizza with assorted mushrooms and cream sauce"
+  },
+  {
+    "id": "pizza-007",
+    "name": "Spicy Sausage",
+    "description": "Fiery Italian sausage crumbles, jalapeños, red chilli flakes, and roasted red peppers on a zesty tomato base.",
+    "price": 529,
+    "tag": "non-veg",
+    "imageAlt": "Spicy Sausage pizza with sausage crumbles and jalapeños"
+  },
+  {
+    "id": "pizza-008",
+    "name": "Four Cheese",
+    "description": "An indulgent blend of mozzarella, cheddar, gouda, and gorgonzola on a white garlic sauce with a drizzle of honey.",
+    "price": 699,
+    "tag": "veg",
+    "imageAlt": "Four Cheese pizza with a golden four-cheese blend and honey drizzle"
+  }
+]
