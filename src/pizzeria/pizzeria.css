@@ -111,3 +111,127 @@ body {
   font-size: 0.9rem;
   line-height: 1.6;
 }
+
+/* ============================================================
+   Hero Section
+   ============================================================ */
+
+.pz-hero {
+  padding: 6rem 2rem;
+  text-align: center;
+  background: var(--pz-red);
+  color: #fff;
+}
+
+.pz-hero h2 {
+  font-size: clamp(2rem, 5vw, 3.5rem);
+  margin-bottom: 1rem;
+}
+
+.pz-hero p {
+  font-size: 1.1rem;
+  margin-bottom: 2rem;
+  opacity: 0.9;
+}
+
+.pz-btn-primary {
+  background: #fff;
+  color: var(--pz-red);
+  border: none;
+  padding: 0.75rem 2rem;
+  border-radius: var(--pz-radius);
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform 0.15s;
+}
+
+.pz-btn-primary:hover {
+  transform: scale(1.05);
+}
+
+/* ============================================================
+   Menu Section
+   ============================================================ */
+
+.pz-menu {
+  padding: 4rem 2rem;
+}
+
+.pz-menu h2 {
+  text-align: center;
+  font-size: 2rem;
+  margin-bottom: 2rem;
+  color: var(--pz-dark);
+}
+
+.pz-menu-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 1.5rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* ============================================================
+   PizzaCard
+   ============================================================ */
+
+.pz-card {
+  background: #fff;
+  border-radius: var(--pz-radius);
+  box-shadow: var(--pz-shadow);
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.pz-card h3 {
+  font-size: 1.1rem;
+  color: var(--pz-dark);
+}
+
+.pz-card-desc {
+  font-size: 0.9rem;
+  color: var(--pz-gray);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  line-height: 1.5;
+}
+
+.pz-card-price {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--pz-dark);
+}
+
+.pz-card-tag {
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.pz-tag--veg {
+  color: green;
+}
+
+.pz-tag--non-veg {
+  color: var(--pz-red);
+}
+
+.pz-btn-add {
+  margin-top: auto;
+  background: var(--pz-red);
+  color: #fff;
+  border: none;
+  padding: 0.6rem 1rem;
+  border-radius: var(--pz-radius);
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.pz-btn-add:hover {
+  opacity: 0.9;
+}
