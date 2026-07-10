@@ -4,6 +4,7 @@ import PizzeriaHeader from './components/PizzeriaHeader';
 import PizzeriaFooter from './components/PizzeriaFooter';
 import HeroSection from './components/HeroSection';
 import MenuSection from './components/MenuSection';
+import CartPanel from './components/CartPanel';
 import { useCartStore } from './hooks/useCartStore';
 
 function PizzeriaPage() {
@@ -12,10 +13,6 @@ function PizzeriaPage() {
 
   const handleCartOpen = () => setCartOpen(true);
   const handleCartClose = () => setCartOpen(false);
-
-  // suppress unused variable warning until CartPanel is wired in story 3
-  void cartOpen;
-  void handleCartClose;
 
   return (
     <div className="pz-page">
@@ -26,8 +23,7 @@ function PizzeriaPage() {
         <MenuSection onAdd={addItem} />
       </main>
 
-      {/* CartPanel stubbed until story 3 — cartOpen and onCartClose wired up */}
-      {null /* <CartPanel open={cartOpen} onClose={handleCartClose} /> */}
+      <CartPanel open={cartOpen} onClose={handleCartClose} />
 
       <PizzeriaFooter />
     </div>
