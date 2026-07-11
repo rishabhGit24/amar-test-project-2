@@ -13,7 +13,6 @@ import CartPanel from './components/CartPanel';
 export default function PizzeriaPage() {
   const [cartOpen, setCartOpen] = useState(false);
   const totalCount = useCartStore((state) => state.totalCount);
-  const addItem = useCartStore((state) => state.addItem);
 
   return (
     <div className="pz-page">
@@ -24,7 +23,8 @@ export default function PizzeriaPage() {
 
       <main>
         <HeroSection />
-        <MenuSection onAdd={addItem} />
+        {/* onAdd is a no-op here; the size-picker modal (story 1) will wire the real call */}
+        <MenuSection onAdd={() => {}} />
       </main>
 
       <CartPanel open={cartOpen} onClose={() => setCartOpen(false)} />

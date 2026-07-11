@@ -70,20 +70,24 @@ export default function CartPanel({ open, onClose }: CartPanelProps) {
           ) : (
             <ul>
               {items.map((cartItem) => {
-                const { menuItem, quantity } = cartItem;
-                const subtotal = menuItem.price * quantity;
+                const { menuItem, size, effectivePrice, quantity } = cartItem;
+                const subtotal = effectivePrice * quantity;
+                const displayName = `${menuItem.name} (${size})`;
 
                 return (
-                  <li key={menuItem.id} className="pz-cart-panel__item">
+                  <li
+                    key={`${menuItem.id}-${size}`}
+                    className="pz-cart-panel__item"
+                  >
                     <span className="pz-cart-panel__item-name">
-                      {menuItem.name}
+                      {displayName}
                     </span>
 
                     <div className="pz-cart-panel__qty-controls">
                       <button
                         type="button"
-                        aria-label={`Decrease quantity of ${menuItem.name}`}
-                        onClick={() => removeItem(menuItem.id)}
+                        aria-label={`Decrease quantity of ${displayName}`}
+                        onClick={() => removeItem(menuItem.id, size)}
                         className="pz-cart-panel__qty-btn"
                       >
                         −
@@ -95,8 +99,8 @@ export default function CartPanel({ open, onClose }: CartPanelProps) {
 
                       <button
                         type="button"
-                        aria-label={`Increase quantity of ${menuItem.name}`}
-                        onClick={() => addItem(menuItem)}
+                        aria-label={`Increase quantity of ${displayName}`}
+                        onClick={() => addItem(menuItem, size, effectivePrice)}
                         className="pz-cart-panel__qty-btn"
                       >
                         +

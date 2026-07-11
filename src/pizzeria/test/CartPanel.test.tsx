@@ -8,7 +8,7 @@
  *  - Panel does NOT have pz-cart-panel--open when open={false}
  *  - Panel HAS pz-cart-panel--open when open={true}
  *  - Empty cart renders "Your cart is empty."
- *  - After adding an item via the store, the item name and price are rendered
+ *  - After adding an item via the store, the item name+size and price are rendered
  *  - Clicking + increments the quantity shown in the panel
  *  - Clicking − when quantity===1 removes the item from the rendered list
  *  - Grand total displays correctly
@@ -83,32 +83,53 @@ describe('CartPanel – empty cart', () => {
 });
 
 describe('CartPanel – item display', () => {
-  it('renders the item name and formatted price after adding one item via the store', () => {
-    useCartStore.getState().addItem(margherita);
+  it('renders the item name with size and formatted price after adding one item via the store', () => {
+    // Medium size: effectivePrice = 299 (1.0 multiplier)
+    useCartStore.getState().addItem(margherita, 'Medium', 299);
     renderPanel();
 
-    expect(screen.getByText('Margherita')).toBeInTheDocument();
+    // Name is displayed as "Margherita (Medium)"
+    expect(screen.getByText('Margherita (Medium)')).toBeInTheDocument();
     // Subtotal for qty=1: ₹299
     expect(screen.getByText('₹299')).toBeInTheDocument();
   });
 
   it('renders the correct subtotal for quantity > 1', () => {
-    useCartStore.getState().addItem(margherita);
-    useCartStore.getState().addItem(margherita); // qty = 2 → ₹598
+    useCartStore.getState().addItem(margherita, 'Medium', 299);
+    useCartStore.getState().addItem(margherita, 'Medium', 299); // qty = 2 → ₹598
     renderPanel();
 
     expect(screen.getByText('₹598')).toBeInTheDocument();
+  });
+
+  it('renders the correct subtotal using effectivePrice (not menuItem.price)', () => {
+    // Large margherita: effectivePrice = Math.round(299 * 1.3) = 389
+    useCartStore.getState().addItem(margherita, 'Large', 389);
+    useCartStore.getState().addItem(margherita, 'Large', 389); // qty = 2 → ₹778
+    renderPanel();
+
+    expect(screen.getByText('Margherita (Large)')).toBeInTheDocument();
+    expect(screen.getByText('₹778')).toBeInTheDocument();
+  });
+
+  it('renders separate lines for the same pizza in different sizes', () => {
+    useCartStore.getState().addItem(margherita, 'Small', 239);
+    useCartStore.getState().addItem(margherita, 'Large', 389);
+    renderPanel();
+
+    expect(screen.getByText('Margherita (Small)')).toBeInTheDocument();
+    expect(screen.getByText('Margherita (Large)')).toBeInTheDocument();
   });
 });
 
 describe('CartPanel – + / − controls', () => {
   it('clicking + increments the displayed quantity', async () => {
     const user = userEvent.setup();
-    useCartStore.getState().addItem(margherita); // qty = 1
+    useCartStore.getState().addItem(margherita, 'Medium', 299); // qty = 1
     renderPanel();
 
     const increaseBtn = screen.getByRole('button', {
-      name: /increase quantity of margherita/i,
+      name: /increase quantity of margherita \(medium\)/i,
     });
     await user.click(increaseBtn);
 
@@ -119,32 +140,48 @@ describe('CartPanel – + / − controls', () => {
 
   it('clicking − when quantity===1 removes the item from the rendered list', async () => {
     const user = userEvent.setup();
-    useCartStore.getState().addItem(margherita); // qty = 1
+    useCartStore.getState().addItem(margherita, 'Medium', 299); // qty = 1
     renderPanel();
 
     const decreaseBtn = screen.getByRole('button', {
-      name: /decrease quantity of margherita/i,
+      name: /decrease quantity of margherita \(medium\)/i,
     });
     await user.click(decreaseBtn);
 
     // Item should be gone; empty-cart message should appear
-    expect(screen.queryByText('Margherita')).not.toBeInTheDocument();
+    expect(screen.queryByText('Margherita (Medium)')).not.toBeInTheDocument();
     expect(screen.getByText('Your cart is empty.')).toBeInTheDocument();
   });
 
   it('clicking − when quantity===2 decrements to 1 without removing the item', async () => {
     const user = userEvent.setup();
-    useCartStore.getState().addItem(margherita);
-    useCartStore.getState().addItem(margherita); // qty = 2
+    useCartStore.getState().addItem(margherita, 'Medium', 299);
+    useCartStore.getState().addItem(margherita, 'Medium', 299); // qty = 2
     renderPanel();
 
     const decreaseBtn = screen.getByRole('button', {
-      name: /decrease quantity of margherita/i,
+      name: /decrease quantity of margherita \(medium\)/i,
     });
     await user.click(decreaseBtn);
 
-    expect(screen.getByText('Margherita')).toBeInTheDocument();
+    expect(screen.getByText('Margherita (Medium)')).toBeInTheDocument();
     expect(useCartStore.getState().items[0].quantity).toBe(1);
+  });
+
+  it('clicking − on one size line does not affect another size line', async () => {
+    const user = userEvent.setup();
+    useCartStore.getState().addItem(margherita, 'Small', 239);
+    useCartStore.getState().addItem(margherita, 'Large', 389);
+    renderPanel();
+
+    const decreaseSmallBtn = screen.getByRole('button', {
+      name: /decrease quantity of margherita \(small\)/i,
+    });
+    await user.click(decreaseSmallBtn);
+
+    // Small line removed, Large line still present
+    expect(screen.queryByText('Margherita (Small)')).not.toBeInTheDocument();
+    expect(screen.getByText('Margherita (Large)')).toBeInTheDocument();
   });
 });
 
@@ -155,42 +192,49 @@ describe('CartPanel – grand total', () => {
   });
 
   it('displays the correct grand total for a single item', () => {
-    useCartStore.getState().addItem(margherita); // 299 × 1 = 299
+    useCartStore.getState().addItem(margherita, 'Medium', 299); // 299 × 1 = 299
     renderPanel();
     expect(screen.getByText('Total: ₹299')).toBeInTheDocument();
   });
 
   it('displays the correct grand total for multiple items', () => {
-    useCartStore.getState().addItem(margherita); // 299
-    useCartStore.getState().addItem(margherita); // 299 × 2 = 598
-    useCartStore.getState().addItem(pepperoni);  // 449 × 1 = 449
+    useCartStore.getState().addItem(margherita, 'Medium', 299); // 299
+    useCartStore.getState().addItem(margherita, 'Medium', 299); // 299 × 2 = 598
+    useCartStore.getState().addItem(pepperoni, 'Medium', 449);  // 449 × 1 = 449
     // Total = 598 + 449 = 1047
     renderPanel();
     expect(screen.getByText('Total: ₹1047')).toBeInTheDocument();
+  });
+
+  it('uses effectivePrice for grand total (not menuItem.price)', () => {
+    // Large margherita effectivePrice = 389, qty = 1 → total = 389
+    useCartStore.getState().addItem(margherita, 'Large', 389);
+    renderPanel();
+    expect(screen.getByText('Total: ₹389')).toBeInTheDocument();
   });
 });
 
 describe('CartPanel – Clear Cart', () => {
   it('clicking "Clear Cart" empties the rendered list', async () => {
     const user = userEvent.setup();
-    useCartStore.getState().addItem(margherita);
-    useCartStore.getState().addItem(pepperoni);
+    useCartStore.getState().addItem(margherita, 'Medium', 299);
+    useCartStore.getState().addItem(pepperoni, 'Medium', 449);
     renderPanel();
 
     // Verify items are present before clearing
-    expect(screen.getByText('Margherita')).toBeInTheDocument();
-    expect(screen.getByText('Pepperoni')).toBeInTheDocument();
+    expect(screen.getByText('Margherita (Medium)')).toBeInTheDocument();
+    expect(screen.getByText('Pepperoni (Medium)')).toBeInTheDocument();
 
     await user.click(screen.getByRole('button', { name: /clear cart/i }));
 
-    expect(screen.queryByText('Margherita')).not.toBeInTheDocument();
-    expect(screen.queryByText('Pepperoni')).not.toBeInTheDocument();
+    expect(screen.queryByText('Margherita (Medium)')).not.toBeInTheDocument();
+    expect(screen.queryByText('Pepperoni (Medium)')).not.toBeInTheDocument();
     expect(screen.getByText('Your cart is empty.')).toBeInTheDocument();
   });
 
   it('grand total resets to ₹0 after clearing the cart', async () => {
     const user = userEvent.setup();
-    useCartStore.getState().addItem(margherita);
+    useCartStore.getState().addItem(margherita, 'Medium', 299);
     renderPanel();
 
     await user.click(screen.getByRole('button', { name: /clear cart/i }));
@@ -201,15 +245,17 @@ describe('CartPanel – Clear Cart', () => {
 
 describe('CartPanel – multiple items in list', () => {
   it('renders all added items in the cart list', () => {
-    useCartStore.getState().addItem(margherita);
-    useCartStore.getState().addItem(pepperoni);
+    useCartStore.getState().addItem(margherita, 'Medium', 299);
+    useCartStore.getState().addItem(pepperoni, 'Medium', 449);
     renderPanel();
 
     const listItems = screen.getAllByRole('listitem');
     expect(listItems).toHaveLength(2);
 
-    const names = listItems.map((li) => within(li).getByText(/Margherita|Pepperoni/).textContent);
-    expect(names).toContain('Margherita');
-    expect(names).toContain('Pepperoni');
+    const names = listItems.map(
+      (li) => within(li).getByText(/Margherita|Pepperoni/).textContent,
+    );
+    expect(names).toContain('Margherita (Medium)');
+    expect(names).toContain('Pepperoni (Medium)');
   });
 });
