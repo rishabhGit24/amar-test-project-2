@@ -3,18 +3,18 @@ import type { MenuItem } from '../types';
 import PizzaCard from './PizzaCard';
 
 interface MenuSectionProps {
-  onAdd: (item: MenuItem) => void;
+  onCardClick: (item: MenuItem) => void;
 }
 
 const menuItems = menuData as MenuItem[];
 
-export default function MenuSection({ onAdd }: MenuSectionProps) {
+export default function MenuSection({ onCardClick }: MenuSectionProps) {
   return (
     <section id="menu" className="pz-menu">
       <h2>Our Menu</h2>
       <div className="pz-menu-grid">
         {menuItems.map((item) => (
-          <PizzaCard key={item.id} menuItem={item} onAdd={onAdd} />
+          <PizzaCard key={item.id} menuItem={item} onCardClick={onCardClick} />
         ))}
       </div>
     </section>
