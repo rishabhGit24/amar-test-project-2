@@ -9,9 +9,12 @@ import PizzeriaFooter from './components/PizzeriaFooter';
 import HeroSection from './components/HeroSection';
 import MenuSection from './components/MenuSection';
 import CartPanel from './components/CartPanel';
+import PizzaDetailModal from './components/PizzaDetailModal';
+import type { MenuItem } from './types';
 
 export default function PizzeriaPage() {
   const [cartOpen, setCartOpen] = useState(false);
+  const [selectedPizza, setSelectedPizza] = useState<MenuItem | null>(null);
   const totalCount = useCartStore((state) => state.totalCount);
 
   return (
@@ -23,11 +26,15 @@ export default function PizzeriaPage() {
 
       <main>
         <HeroSection />
-        {/* onAdd is a no-op here; the size-picker modal (story 1) will wire the real call */}
-        <MenuSection onAdd={() => {}} />
+        <MenuSection onCardClick={setSelectedPizza} />
       </main>
 
       <CartPanel open={cartOpen} onClose={() => setCartOpen(false)} />
+
+      <PizzaDetailModal
+        menuItem={selectedPizza}
+        onClose={() => setSelectedPizza(null)}
+      />
 
       <PizzeriaFooter />
     </div>

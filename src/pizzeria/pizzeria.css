@@ -235,6 +235,11 @@ body {
   outline-offset: 2px;
 }
 
+.pz-cart-panel__qty-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
 .pz-cart-panel__qty-value {
   min-width: 1.25rem;
   text-align: center;
@@ -343,6 +348,17 @@ body {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
+  transition: box-shadow 0.15s, transform 0.15s;
+}
+
+.pz-card:hover {
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+  transform: translateY(-2px);
+}
+
+.pz-card:focus {
+  outline: 2px solid var(--pz-red);
+  outline-offset: 2px;
 }
 
 .pz-card-desc {
@@ -367,10 +383,17 @@ body {
   border-radius: var(--pz-radius);
   cursor: pointer;
   font-weight: 600;
+  font-size: 0.95rem;
+  transition: opacity 0.15s;
 }
 
 .pz-btn-add:hover {
   opacity: 0.9;
+}
+
+.pz-btn-add:focus {
+  outline: 2px solid var(--pz-red);
+  outline-offset: 2px;
 }
 
 .pz-card-tag {
@@ -384,6 +407,137 @@ body {
 
 .pz-tag--non-veg {
   color: var(--pz-red);
+}
+
+/* ── PizzaDetailModal ──────────────────────────────────────── */
+
+/* Enter animation keyframes */
+@keyframes pzModalIn {
+  from {
+    opacity: 0;
+    transform: scale(0.92);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Overlay */
+.pz-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  z-index: 300;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+}
+
+/* Dialog */
+.pz-modal {
+  background: #fff;
+  border-radius: var(--pz-radius);
+  box-shadow: 0 8px 40px rgba(0, 0, 0, 0.25);
+  padding: 2rem;
+  width: 100%;
+  max-width: 480px;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  animation: pzModalIn 0.2s ease-out;
+  position: relative;
+}
+
+/* Tag area */
+.pz-modal__tag {
+  display: flex;
+  align-items: center;
+}
+
+/* Title */
+.pz-modal__title {
+  font-size: clamp(1.25rem, 3vw, 1.75rem);
+  font-weight: 700;
+  color: var(--pz-dark);
+  line-height: 1.2;
+}
+
+/* Description */
+.pz-modal__desc {
+  font-size: 0.95rem;
+  color: var(--pz-gray);
+  line-height: 1.6;
+}
+
+/* Size selector group */
+.pz-modal__size-selector {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+/* Size pill — unselected */
+.pz-modal__size-pill {
+  padding: 0.4rem 1.25rem;
+  border-radius: 999px;
+  border: 1.5px solid var(--pz-red);
+  background: transparent;
+  color: var(--pz-red);
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.pz-modal__size-pill:hover {
+  background: var(--pz-cream);
+}
+
+.pz-modal__size-pill:focus {
+  outline: 2px solid var(--pz-red);
+  outline-offset: 2px;
+}
+
+/* Size pill — selected */
+.pz-modal__size-pill--selected {
+  background: var(--pz-red);
+  color: #fff;
+}
+
+.pz-modal__size-pill--selected:hover {
+  background: var(--pz-red);
+  opacity: 0.9;
+}
+
+/* Price display */
+.pz-modal__price {
+  font-size: clamp(1.5rem, 4vw, 2rem);
+  font-weight: 700;
+  color: var(--pz-dark);
+}
+
+/* Quantity stepper */
+.pz-modal__stepper {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+/* Footer */
+.pz-modal__footer {
+  margin-top: 0.5rem;
+}
+
+/* Full-width add button inside modal */
+.pz-modal__add-btn {
+  width: 100%;
+  margin-top: 0;
+  padding: 0.75rem 1rem;
+  font-size: 1rem;
 }
 
 /* ── Responsive breakpoints ────────────────────────────────── */
@@ -403,5 +557,23 @@ body {
   .pz-footer {
     flex-direction: column;
     gap: 1.5rem;
+  }
+
+  /* Bottom-sheet modal on mobile */
+  .pz-modal-overlay {
+    align-items: flex-end;
+    padding: 0;
+  }
+
+  .pz-modal {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    border-radius: var(--pz-radius) var(--pz-radius) 0 0;
+    max-height: 90vh;
+    overflow-y: auto;
+    max-width: 100%;
+    margin: 0;
   }
 }
